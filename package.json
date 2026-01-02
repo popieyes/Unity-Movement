@@ -9,8 +9,7 @@
         "email": "dragonier2013@gmail.com"
     },
     "dependencies": {
-        "com.unity.cinemachine": "3.1.5",
-        "com.popieyes.input": "git+https://github.com/popieyes/Unity-Input-.git"
+        "com.popieyes.input": "https://github.com/popieyes/Unity-Input-.git"
     }
 
 }
