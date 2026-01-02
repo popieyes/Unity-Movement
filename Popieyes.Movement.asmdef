@@ -1,0 +1,16 @@
+{
+    "name": "Popieyes.Movement",
+    "rootNamespace": "Popieyes.Movement",
+    "references": [
+        "GUID:805c469f533f86345a1d4e1bf7c23e4d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
