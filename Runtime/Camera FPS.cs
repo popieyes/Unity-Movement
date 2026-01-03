@@ -40,8 +40,8 @@ namespace Popieyes.Movement
             _mouseX += _inputProcessor.Look.x * _cameraSettings.MouseSensitivity * Time.deltaTime;
             _mouseY -= _inputProcessor.Look.y * _cameraSettings.MouseSensitivity * Time.deltaTime;
             _mouseY = Mathf.Clamp(_mouseY, _cameraSettings.MinY, _cameraSettings.MaxY);
-            transform.localRotation = Quaternion.Euler(0f, _mouseX, 0f);
-            _head.transform.localRotation = Quaternion.Euler(_mouseY, 0f, 0f);
+/*             transform.localRotation = Quaternion.Euler(0f, _mouseX, 0f); */
+            _head.transform.localRotation = Quaternion.Euler(_mouseY, _mouseX, 0f);
         }
 
         void FixedUpdate()

@@ -11,5 +11,6 @@ namespace Popieyes.Movement
         public float Acceleration = 10f;
         public float Deceleration = 10f;
         public float RunMultiplier = 1.5f;
+        public float TurnSmoothing = 0.1f;
     }
 }
