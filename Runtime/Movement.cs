@@ -1,6 +1,7 @@
 using UnityEngine;
 using Popieyes.Input;
 using UnityEditor.Callbacks;
+using Codice.Client.BaseCommands;
 
 namespace Popieyes.Movement
 {
@@ -12,7 +13,8 @@ namespace Popieyes.Movement
         [SerializeField] MovementData _movementData;
         InputProcessor _inputProcessor;
         Rigidbody _rb;
-        float movementSpeed;
+        public float Speed => _rb.linearVelocity.magnitude;
+        public bool IsSprinting = false;
         Camera mainCamera;
         [SerializeField] Transform body; 
         
@@ -39,7 +41,6 @@ namespace Popieyes.Movement
             _inputProcessor.OnCrouchPerformed += Crouch;
             _inputProcessor.OnCrouchCanceled += StandUp;
             _inputProcessor.OnJumpPerformed += Jump;
-            movementSpeed = _movementData.MoveSpeed;
         }
 
         void Update()
@@ -82,7 +83,7 @@ namespace Popieyes.Movement
             float angle = Mathf.SmoothDampAngle(body.eulerAngles.y, targetAngle, ref _movementData.TurnSmoothing, 0.1f);
             body.rotation = Quaternion.Euler(0f,angle,0f); 
 
-            Vector3 targetVelocity = desiredDirection * movementSpeed;
+            Vector3 targetVelocity = IsSprinting ? desiredDirection * (_movementData.MoveSpeed * _movementData.RunMultiplier) : desiredDirection * _movementData.MoveSpeed;
             targetVelocity.y = _rb.linearVelocity.y;
             _rb.linearVelocity = Vector3.Lerp(_rb.linearVelocity, targetVelocity, _movementData.Acceleration * Time.fixedDeltaTime);
         }
@@ -93,12 +94,12 @@ namespace Popieyes.Movement
         }  
         void Sprint()
         {
-            movementSpeed *= _movementData.RunMultiplier;
+            IsSprinting = true;
         }
 
         void Walk()
         {
-            movementSpeed = _movementData.MoveSpeed;
+            IsSprinting = false;
         }
         void Crouch()
         {
