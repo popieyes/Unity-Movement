@@ -1,9 +1,7 @@
 {
-    "name": "Kronos.Movement",
-    "rootNamespace": "Kronos.Movement",
-    "references": [
-        "GUID:805c469f533f86345a1d4e1bf7c23e4d"
-    ],
+    "name": "Kronos.Movement.Editor",
+    "rootNamespace": "",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

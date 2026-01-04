@@ -1,11 +1,11 @@
 {
-    "name": "com.popieyes.movement",
-    "version": "1.0.0",
+    "name": "com.teamkronos.movement",
+    "version": "1.0.2",
     "displayName": "Movement System",
     "description": "Provides reusable modules for managing character movement in Unity",
     "unity": "6000.2",
     "author": {
-        "name": "Santiago Meneses Gómez",
+        "name": "Team Kronos",
         "email": "dragonier2013@gmail.com"
     },
     "dependencies": {

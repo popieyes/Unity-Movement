@@ -1,22 +1,25 @@
 using UnityEngine;
 using Popieyes.Input;
-using UnityEditor.Callbacks;
-using Codice.Client.BaseCommands;
+
 
 namespace Popieyes.Movement
 {
-    [RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(InputProcessor))]
+    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class Movement : MonoBehaviour
     {
         #region Variables
         // Configurable fields, private references, etc.
+        [Header("Configuration")]
         [SerializeField] MovementData _movementData;
-        InputProcessor _inputProcessor;
+        [Header("References")]
+        [SerializeField] Transform body;
+        [Header("Settings")]
+        [SerializeField] bool _turnBodyWithAimDirection = true; 
         Rigidbody _rb;
+        Collider _collider;
         public float Speed => _rb.linearVelocity.magnitude;
-        public bool IsSprinting = false;
+        bool IsSprinting = false;
         Camera mainCamera;
-        [SerializeField] Transform body; 
         
         #endregion
 
@@ -28,44 +31,23 @@ namespace Popieyes.Movement
         void Awake()
         {
             _rb = GetComponent<Rigidbody>();
-            _inputProcessor = GetComponent<InputProcessor>();
+            _collider = GetComponent<Collider>();
+            
             mainCamera = Camera.main;
 
             _rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
         }
-
-        void Start()
-        {
-            _inputProcessor.OnSprintPerformed += Sprint;
-            _inputProcessor.OnSprintCanceled += Walk;
-            _inputProcessor.OnCrouchPerformed += Crouch;
-            _inputProcessor.OnCrouchCanceled += StandUp;
-            _inputProcessor.OnJumpPerformed += Jump;
-        }
-
-        void Update()
-        {
-            
-        }
-
-        void FixedUpdate()
-        {
-            Move();
-        }
-
-        void LateUpdate()
-        {
-            
-        }
         #endregion
 
         #region Custom Functions
-        void Move()
+        void Move(Vector2 _inputDir)
         {
-            Vector3 _inputDirection = new Vector3(_inputProcessor.Input.x, 0, _inputProcessor.Input.y).normalized;
+            Vector3 _inputDirection = new Vector3(_inputDir.x, 0, _inputDir.y).normalized;
             
             if(_inputDirection.sqrMagnitude > 0.1f) Accelerate(_inputDirection);
             else Decelerate();
+            if(_turnBodyWithAimDirection) RotateBody();
+            else if(_inputDirection.sqrMagnitude > 0.1f) RotateBody();
          
         }
         void Accelerate(Vector3 dir)
@@ -74,14 +56,8 @@ namespace Popieyes.Movement
             Vector3 right = mainCamera.transform.right;
             forward.y = 0;
             right.y = 0;
-            forward.Normalize();
-            right.Normalize();
 
             Vector3 desiredDirection = (forward * dir.z + right * dir.x).normalized;
-            
-            float targetAngle = Mathf.Atan2(desiredDirection.x, desiredDirection.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(body.eulerAngles.y, targetAngle, ref _movementData.TurnSmoothing, 0.1f);
-            body.rotation = Quaternion.Euler(0f,angle,0f); 
 
             Vector3 targetVelocity = IsSprinting ? desiredDirection * (_movementData.MoveSpeed * _movementData.RunMultiplier) : desiredDirection * _movementData.MoveSpeed;
             targetVelocity.y = _rb.linearVelocity.y;
@@ -91,7 +67,20 @@ namespace Popieyes.Movement
         {
             Vector3 stopVelocity = new Vector3(0,_rb.linearVelocity.y,0);
             _rb.linearVelocity = Vector3.Lerp(_rb.linearVelocity, stopVelocity, _movementData.Deceleration * Time.fixedDeltaTime);
-        }  
+        } 
+        void RotateBody()
+        {
+            Vector3 forward = mainCamera.transform.forward;
+            Vector3 right = mainCamera.transform.right;
+            forward.y = 0;
+            right.y = 0;
+
+            Vector3 desiredDirection = (forward + right).normalized;
+
+            float targetAngle = Mathf.Atan2(desiredDirection.x, desiredDirection.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(body.eulerAngles.y, targetAngle, ref _movementData.TurnSmoothing, 0.1f);
+            body.rotation = Quaternion.Euler(0f,angle,0f); 
+        }
         void Sprint()
         {
             IsSprinting = true;
