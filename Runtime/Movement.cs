@@ -40,7 +40,7 @@ namespace Popieyes.Movement
         #endregion
 
         #region Custom Functions
-        void Move(Vector2 _inputDir)
+        public void Move(Vector2 _inputDir)
         {
             Vector3 _inputDirection = new Vector3(_inputDir.x, 0, _inputDir.y).normalized;
             
@@ -50,7 +50,7 @@ namespace Popieyes.Movement
             else if(_inputDirection.sqrMagnitude > 0.1f) RotateBody();
          
         }
-        void Accelerate(Vector3 dir)
+        public void Accelerate(Vector3 dir)
         {
             Vector3 forward = mainCamera.transform.forward;
             Vector3 right = mainCamera.transform.right;
@@ -63,7 +63,7 @@ namespace Popieyes.Movement
             targetVelocity.y = _rb.linearVelocity.y;
             _rb.linearVelocity = Vector3.Lerp(_rb.linearVelocity, targetVelocity, _movementData.Acceleration * Time.fixedDeltaTime);
         }
-        void Decelerate()
+        public void Decelerate()
         {
             Vector3 stopVelocity = new Vector3(0,_rb.linearVelocity.y,0);
             _rb.linearVelocity = Vector3.Lerp(_rb.linearVelocity, stopVelocity, _movementData.Deceleration * Time.fixedDeltaTime);
@@ -81,24 +81,24 @@ namespace Popieyes.Movement
             float angle = Mathf.SmoothDampAngle(body.eulerAngles.y, targetAngle, ref _movementData.TurnSmoothing, 0.1f);
             body.rotation = Quaternion.Euler(0f,angle,0f); 
         }
-        void Sprint()
+        public void Sprint()
         {
             IsSprinting = true;
         }
 
-        void Walk()
+        public void Walk()
         {
             IsSprinting = false;
         }
-        void Crouch()
+        public void Crouch()
         {
             transform.localScale = new Vector3(1f,0.5f,1f);
         }
-        void StandUp()
+        public void StandUp()
         {
             transform.localScale = new Vector3(1f,1f,1f);
         }
-        void Jump()
+        public void Jump()
         {
             _rb.linearVelocity += new Vector3(0f,_movementData.JumpForce,0f);
         }
