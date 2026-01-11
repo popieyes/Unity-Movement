@@ -2,7 +2,10 @@
     "name": "Kronos.Movement",
     "rootNamespace": "Kronos.Movement",
     "references": [
-        "GUID:805c469f533f86345a1d4e1bf7c23e4d"
+        "GUID:805c469f533f86345a1d4e1bf7c23e4d",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:5ff932b778fa3414ca0b008a65229c90"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
