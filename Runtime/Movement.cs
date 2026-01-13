@@ -25,6 +25,8 @@ namespace Kronos.Movement
         
         float TurnSmoothing = 0.1f;
         private float _currentSpeed; 
+
+        private bool _enabled => gameObject.activeSelf;
         #endregion
 
         #region Events
@@ -44,6 +46,7 @@ namespace Kronos.Movement
         #region Custom Functions
         public void Move(Vector2 _inputDir, bool useCamera = true)
         {
+            if(!_enabled) return;
             Vector3 _inputDirection = new Vector3(_inputDir.x, 0, _inputDir.y).normalized;
             
             if(_inputDirection.sqrMagnitude > 0.1f) Accelerate(_inputDirection, useCamera);
@@ -54,6 +57,7 @@ namespace Kronos.Movement
         }
         public void Accelerate(Vector3 dir, bool useCamera)
         {
+            if(!_enabled) return;
             Vector3 forward = _orientation != null ? _orientation.forward : Camera.main.transform.forward;
             Vector3 right = _orientation != null ? _orientation.right : Camera.main.transform.right;
             forward.y = 0;
@@ -71,11 +75,13 @@ namespace Kronos.Movement
         }
         public void Decelerate()
         {
+            if(!_enabled) return;
             Vector3 stopVelocity = new Vector3(0,_rb.linearVelocity.y,0);
             _rb.linearVelocity = Vector3.Lerp(_rb.linearVelocity, stopVelocity, Data.Deceleration * Time.fixedDeltaTime);
         } 
         private void RotateBody(Vector3 dir)
         {
+            if(!_enabled) return;
             Vector3 forward = Camera.main.transform.forward;
             Vector3 right = Camera.main.transform.right;
             forward.y = 0;
@@ -103,6 +109,7 @@ namespace Kronos.Movement
         public bool IsGrounded() => Physics.CheckSphere(transform.position, Data.GroundSphereSize, Data.GroundLayers);
         public void Jump()
         {
+            if(!_enabled) return;
             if(IsGrounded())
                 _rb.AddForce(Vector3.up * Data.JumpForce, ForceMode.VelocityChange);
         }
